@@ -3,4 +3,10 @@ st.session_state.user = "Dharmendra"
 import home
 
 
-home.form_data(st.session_state.user)
+tab1, tab2 = st.tabs(["📈 News", "🗃 OpenAI"])
+
+with tab1:
+   home.news_data(st.session_state.user)
+
+with tab2:
+    home.form_data(st.session_state.user)
