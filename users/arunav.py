@@ -1,6 +1,6 @@
 import streamlit as st
 st.session_state.user = "Arunav"
-st.session_state.article = None
+st.session_state.articles = []
 import home
 
 
