@@ -10,12 +10,8 @@ if 'extract_text' not in st.session_state:
 ADMIN_ACCESS_KEY = st.secrets.ADMIN_ACCESS_KEY
 ADMIN_SECRET_KEY = st.secrets.ADMIN_SECRET_KEY
 
-# aws_access_key_id = st.session_state.aws_access_key_id
-# aws_secret_access_key = st.session_state.aws_secret_access_key
 
-st.header(" 👨‍⚕️ :red[Healthcare]   :green[ChatGPT]", divider=True)
-st.header("Training Module")
-
+st.header(" 👨‍⚕️ :red[Healthcare]   :green[ChatGPT] Training Module", divider=True)
 
 if st.session_state.user == None:
     with st.form("login",clear_on_submit=True):
@@ -43,10 +39,11 @@ if st.session_state.user:
     priya = st.Page("users/priya.py",title="Priya!", icon="🐱")
     shashikant = st.Page("users/shashikant.py", title= "Shashikant!", icon="🧑‍💻")
     vivek =  st.Page("users/vivek.py", title= "Vivek!", icon="🧑‍🏫")
+    test = st.Page("users/test.py", title = "Developer!", icon="🧊")
     pg = st.navigation(
         {
             
-            "Users": [arunav, jit, shubham, varsha, priya, amar, dharmendra, shashikant, vivek],
+            "Users": [arunav, jit, shubham, varsha, priya, amar, dharmendra, shashikant, vivek, test],
 
         }
     )
