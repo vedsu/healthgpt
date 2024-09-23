@@ -19,10 +19,10 @@ aws_secret_access_key = st.secrets.aws_secret_access_key
 db_username = st.secrets.db_username
 db_password = st.secrets.db_password
 
-# st.write(st.session_state.article)
+
 if 'articles' not in st.session_state:
     st.session_state.articles = []
-    # st.write(st.session_state.article)
+    
 if 'page' not in st.session_state:    
     st.session_state.page  = None
 if 'role' not in st.session_state:
@@ -67,16 +67,12 @@ def news_data(user):
     icon = icon_dict.get(user)
     st.info(f"Hello, {user}!", icon=icon)
     
-    # column1, column2 = st.columns(2)
-    # with column1:
+    
     on = st.sidebar.toggle("View headlines")
-    # with column2:
-        # if st.button("search news"):
-            # st.session_state.article = None
-        # st.rerun()
+    
 
               
-    # if st.session_state.article is None:
+    
         
     if on:
             with st.sidebar.form(f"{user} search headlines", clear_on_submit=False):
@@ -173,14 +169,7 @@ def news_data(user):
     if st.session_state.articles:
              
             
-            # col1, col2 = st.columns(2)
-            # with col1:
-            #     st.write(f"Found {len(articles)} articles.")
-            # with col2:
-            #     if st.button("go back to search"):
-            #         st.session_state.article = None
-            #         st.rerun()
-
+           
             
 
             # Number of articles per page
@@ -197,7 +186,7 @@ def news_data(user):
             start_idx = (st.session_state.page - 1) * articles_per_page
             # end_idx = start_idx + articles_per_page if len(st.session_state.article) > articles_per_page else len(st.session_state.article)
             end_idx = min(start_idx + articles_per_page, len(st.session_state.articles))
-            st.write(start_idx,end_idx,total_pages)
+            # st.write(start_idx,end_idx,total_pages)
             # Display articles for the current page
             for i, article in enumerate(st.session_state.articles[start_idx:end_idx], start=start_idx+1):
                 st.subheader(f"{i}. {article['title']}")
