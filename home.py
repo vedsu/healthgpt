@@ -170,7 +170,7 @@ def news_data(user):
              
             
            
-            st.info(f"{Found - {len(st.session_state.articles)} articles")
+            st.info(f"Found - {len(st.session_state.articles)} articles")
 
             # Number of articles per page
             articles_per_page = 10
