@@ -191,7 +191,7 @@ def news_data(user):
     else:
             # if submit_button:
                 st.write("No articles found for the given query.")
-                st.session_state.articles = None
+                # st.session_state.articles = None
 
 # function to take form details
 def form_data(user):
