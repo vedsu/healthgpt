@@ -1,7 +1,8 @@
 import streamlit as st
 st.set_page_config("CustomGPT Trainer", page_icon="🧿")
 import home as home
-
+if 'articles' not in st.session_state:
+    st.session_state.articles = []
 if 'user' not in st.session_state:
     st.session_state.user = None
 if 'extract_text' not in st.session_state:
