@@ -19,9 +19,10 @@ aws_secret_access_key = st.secrets.aws_secret_access_key
 db_username = st.secrets.db_username
 db_password = st.secrets.db_password
 
-if 'article' not in st.session_state:
-    st.session_state.article = None
-    st.session_state.page  = None
+if 'articles' not in st.session_state:
+    st.session_state.articles = []
+if 'page' not in st.session_state:    
+    st.session_state.page  = 1
 if 'role' not in st.session_state:
     st.session_state.role = None
 
@@ -52,7 +53,8 @@ icon_dict = {"Arunav":"🐼",
                     "Varsha":"🦋",
                     "Dharmendra":"🦹‍♂️",
                     "Vivek":"🧑‍🏫",
-                    "Shashikant":"🧑‍💻"}
+                    "Shashikant":"🧑‍💻",
+             "Developer":"🧊"}
                     
 #function to view news
 
@@ -60,7 +62,7 @@ def news_data(user):
     st.session_state.role = 'news'
     articles =  []
     icon = icon_dict.get(user)
-    st.info(f"Hello, {user}!", icon=icon)
+    st.info(f"Hello, {user} Found {len(st.session_state.articles)} articles!", icon=icon)
     
     # column1, column2 = st.columns(2)
     # with column1:
@@ -78,16 +80,9 @@ def news_data(user):
                 search_text = st.text_input('search text:', placeholder= 'enter your text to search')
                 submit_button = st.form_submit_button(label='Search')
                 if submit_button:
-                    # /v2/top-headlines
-                    # top_headlines = newsapi.get_top_headlines(q=search_text,
-                    #                     #   sources='bbc-news,the-verge',
-                    #                       category='health',
-                    #                       language='en',
-                    #                       country='us')
-                    # st.session_state.article = top_headlines
-                    # st.text_area(label="articles", placeholder=top_headlines)
+                   
             
-                    #  https://newsapi.org/v2/top-headlines?q=hipaa&country=us&category=health&apiKey=7f4969be87b541b887aa3c6a22176126   
+                     
                     url = "https://newsapi.org/v2/top-headlines"
                     params = {
                         'q' : search_text,
@@ -101,8 +96,8 @@ def news_data(user):
                                 data = response.json()
                                 
                                 # Extract the articles
-                                articles = data.get("articles", [])
-                                st.session_state.article = articles
+                                st.session_state.articles = data.get("articles", [])
+                                
                                 # st.text_area(label="articles", placeholder=st.session_state.article)
                     else:
                                 st.write(f"Failed to fetch articles. Status code: {response.status_code}")
@@ -123,14 +118,7 @@ def news_data(user):
 
                 if submit_button:
                     comma_separated_string = ",".join(search_in)
-                    # st.write(comma_separated_string)
-                    # /v2/everything
-                    # all_articles = newsapi.get_everything(q=search_text,
-                    #                                     # searchIn = comma_separated_string,
-                    #                                     from_param=from_date,
-                    #                                     language='en',
-                    #                                     sort_by=sort_by,
-                    #                                     )
+                    
                     # Define the API URL and parameters
                     url = "https://newsapi.org/v2/everything"
                     params = {
@@ -155,20 +143,20 @@ def news_data(user):
                         data = response.json()
                         
                         # Extract the articles
-                        articles = data.get("articles", [])
-                        st.session_state.article = articles
+                        st.session_state.articles = data.get("articles", [])
+                        # st.session_state.article = articles
                     else:
                         st.write(f"Failed to fetch articles. Status code: {response.status_code}")
                         
                     # Display articles
             
         # Pagination Logic
-    if st.session_state.article:
+    if st.session_state.articles:
              
             
-            col1, col2 = st.columns(2)
-            with col1:
-                st.write(f"Found {len(st.session_state.article)} articles.")
+            # col1, col2 = st.columns(2)
+            # with col1:
+            #     st.write(f"Found {len(st.session_state.article)} articles.")
             # with col2:
             #     if st.button("go back to search"):
             #         st.session_state.article = None
@@ -180,7 +168,7 @@ def news_data(user):
             articles_per_page = 10
 
             # Calculate total number of pages
-            total_pages = (len(st.session_state.article) - 1) // articles_per_page + 1
+            total_pages = (len(st.session_state.articles) - 1) // articles_per_page + 1
 
             # Create pagination buttons
             st.session_state.page = st.number_input("Page", min_value=1, max_value=total_pages, step=1)
@@ -189,10 +177,10 @@ def news_data(user):
             # Calculate start and end indices for the current page
             start_idx = (st.session_state.page - 1) * articles_per_page
             # end_idx = start_idx + articles_per_page if len(st.session_state.article) > articles_per_page else len(st.session_state.article)
-            end_idx = min(start_idx + articles_per_page, len(st.session_state.article))
+            end_idx = min(start_idx + articles_per_page, len(st.session_state.articles))
 
             # Display articles for the current page
-            for i, article in enumerate(st.session_state.article[start_idx:end_idx], start=start_idx+1):
+            for i, article in enumerate(st.session_state.articles[start_idx:end_idx], start=start_idx+1):
                 st.subheader(f"{i}. {article['title']}")
                 st.write(article["description"])
                 st.write(f"[Read more]({article['url']})")
@@ -203,7 +191,7 @@ def news_data(user):
     else:
             # if submit_button:
                 st.write("No articles found for the given query.")
-                st.session_state.article = None
+                st.session_state.articles = None
 
 # function to take form details
 def form_data(user):
@@ -219,16 +207,18 @@ def form_data(user):
             "Dharmendra":["Community Source", "Government Source", "Organisations","Google Trends", "Instagram", "Facebook", "Twitter",
                         "You Tube", "Competitors Source", "Inhouse Source","Linkedin", "Others"],
             "Vivek":["Linkedin", "Others" ],
-            "Shashikant":["Others"]}
+            "Shashikant":["Others"],
+                "Developer":["Community Source", "Government Source", "Organisations","Google Trends", "Instagram", "Facebook", "Twitter",
+                        "You Tube", "Competitors Source", "Inhouse Source","Linkedin", "Others"],       }
 
-        
-        with st.form(f"{user}"):
+        doc_count = len(list(collection.find({"user":user})))
+        with st.form(f"{user}", clear_on_submit=True):
         
             icon = icon_dict.get(user)
             st.info(f"Hello, {user}!", icon=icon)
             
 
-            # st.info(f"Hello, {user}!")
+            # st.info(f"Hello, {user}! - Documents:{doc_count}")
             options = sorted(option_dict.get(user))
             document = st.text_input('Ref doc :', placeholder='enter your reference doc name')
             platform = st.selectbox("Ref platform :", options = options)
@@ -278,6 +268,7 @@ def form_data(user):
                     try:
                         collection.insert_one(document)
                         st.success("upload successfull")
+                        st.rerun()
                     except Exception as e:
                           st.error(f"upload failed: {str(e)}")
 
