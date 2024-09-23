@@ -65,7 +65,7 @@ def news_data(user):
     st.session_state.role = 'news'
     articles =  []
     icon = icon_dict.get(user)
-    st.info(f"Hello, {user}!", icon=icon)
+    st.info(f"Hello, {user}! - Found:{len(st.session_state_articles)}"", icon=icon)
     
     
     on = st.sidebar.toggle("View headlines")
