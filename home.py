@@ -25,9 +25,12 @@ if 'articles' not in st.session_state:
     
 if 'page' not in st.session_state:    
     st.session_state.page  = None
+
 if 'role' not in st.session_state:
     st.session_state.role = None
 
+if 'gov_articles' not in st.session_state:
+    st.session_state.gov_articles = []
 
 # mongo connection
 mongo_uri_template = "mongodb+srv://{username}:{password}@cluster0.thbmwqi.mongodb.net/"
@@ -58,6 +61,79 @@ icon_dict = {"Arunav":"🐼",
                     "Shashikant":"🧑‍💻",
                     "Developer":"🧊"}
                     
+
+# function to view myGov 
+
+def gov_data(user):
+    
+    st.session_state.role = 'gov'
+    gov_articles =  []
+    icon = icon_dict.get(user)
+    st.info(f"Hello, {user}!", icon=icon)
+    api_key = "hjacpL8PngljgbCwwPTrr7xG4KSGfdkbr5RWHgho"
+    # API endpoint
+    url = "https://api.govinfo.gov/search"
+    
+    # Headers for the POST request
+    headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': api_key
+    }
+    
+    with st.form("gov", clear_on_submit=False):
+        search  =  st.text_input(label="Query:", placeholder="enter you text here")    
+        pageSize = st.number_input(label="Page Size:", placeholder="articles count in single page", min_value=10, max_value=100, value="min", step=10)
+        if st.form_submit_button(label="Search"):
+    
+            # Body data for the request
+            body = {
+            "query": search,
+            "pageSize": pageSize,
+            "offsetMark": "*",
+            "sorts": [
+                {
+                    "field": "relevancy",
+                    "sortOrder": "ASC"
+                }
+            ],
+            "historical": True,
+            "resultLevel": "default"
+            }
+            # Sending POST request
+            response = requests.post(url, headers=headers, json=body)
+
+            # Print the response
+            if response.status_code == 200:
+                st.session_state.gov_articles = response.json()
+                st.success(f"related documents found:{st.session_state.gov_articles["count"]}")
+
+            else:
+                st.error(f"Error: {response.status_code}")
+    if len(st.session_state.gov_articles) > 0:
+        # Display each result in the JSON response
+        for result in st.session_state.gov_articles['results']:
+            st.subheader(result['title'])
+            # st.write(f"Package ID: {result['packageId']}")
+            # st.write(f"Granule ID: {result['granuleId']}")
+            st.write(f"Last Modified: {result['lastModified']}")
+            st.write(f"Date Issued: {result['dateIssued']}")
+            st.write(f"Collection Code: {result['collectionCode']}")
+            
+            # Display government authors
+            st.write("Government Authors:")
+            for author in result['governmentAuthor']:
+                st.write(f"- {author}")
+           
+            # Display download links
+            url_pdf = f"{result['download']['pdfLink']}?api_key={api_key}"
+            st.page_link(url_pdf, label="PDF", icon="🌎")
+            
+
+            # Divider for clarity between results
+            st.markdown("---")
+
+        
+
 #function to view news
 
 def news_data(user):
