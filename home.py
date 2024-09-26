@@ -70,7 +70,7 @@ def gov_data(user):
     gov_articles =  []
     icon = icon_dict.get(user)
     st.info(f"Hello, {user}!", icon=icon)
-    api_key = "hjacpL8PngljgbCwwPTrr7xG4KSGfdkbr5RWHgho"
+    api_key = st.secrets.api_key
     # API endpoint
     url = "https://api.govinfo.gov/search"
     
