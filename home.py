@@ -132,8 +132,8 @@ def gov_data(user):
                 # Divider for clarity between results
                 st.markdown("---")
     except:
-        st.error("error detected")
-        # st.session_state.gov_articles = []
+        st.error("error detected, no data found")
+        st.session_state.gov_articles = []
         
         
 
