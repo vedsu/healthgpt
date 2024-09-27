@@ -109,7 +109,7 @@ def gov_data(user):
 
             else:
                 st.error(f"Error: {response.status_code}")
-    if len(st.session_state.gov_articles) > 0:
+    if st.session_state.gov_articles:
         # Display each result in the JSON response
         for result in st.session_state.gov_articles['results']:
             st.subheader(result['title'])
