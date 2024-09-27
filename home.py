@@ -18,7 +18,8 @@ aws_access_key_id = st.secrets.aws_access_key_id
 aws_secret_access_key = st.secrets.aws_secret_access_key
 db_username = st.secrets.db_username
 db_password = st.secrets.db_password
-
+if 'gov_articles' not in st.session_state:
+    st.session_state.gov_articles = []
 
 if 'articles' not in st.session_state:
     st.session_state.articles = []
@@ -29,8 +30,7 @@ if 'page' not in st.session_state:
 if 'role' not in st.session_state:
     st.session_state.role = None
 
-if 'gov_articles' not in st.session_state:
-    st.session_state.gov_articles = []
+
 
 # mongo connection
 mongo_uri_template = "mongodb+srv://{username}:{password}@cluster0.thbmwqi.mongodb.net/"
@@ -67,7 +67,7 @@ icon_dict = {"Arunav":"🐼",
 def gov_data(user):
     
     st.session_state.role = 'gov'
-    # gov_articles =  []
+    gov_articles =  []
     icon = icon_dict.get(user)
     st.info(f"Hello, {user}!", icon=icon)
     api_key = st.secrets.api_key
