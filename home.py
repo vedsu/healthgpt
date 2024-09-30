@@ -137,7 +137,7 @@ def gov_data(user):
 
 
         else:
-            with st.form("doc_gov", clear_on_submit=False):
+                    with st.form("doc_gov", clear_on_submit=False):
                         options=["BILLS", "BILLSTATUS", "BUDGET", "CCAL", "CDIR", "CDOC", "CFR", "CHRG", "CMR", "COMPS",
                                 "CPD", "CPRT", "CREC", "CRECB", "CRI", "CRPT", "CZIC", "ECFR", "ECONI", "ERIC","ERP",
                                 "FR", "GAOREPORTS", "GOVMAN", "GOVPUB", "GPO", "HJOURNAL", "HMAN", "HOB", "LSA", "PAI",
