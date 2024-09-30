@@ -70,6 +70,8 @@ def gov_data(user):
         gov_articles =  []
         icon = icon_dict.get(user)
         st.info(f"Hello, {user}!", icon=icon)
+        on = st.toggle("search by query")
+        
         api_key = st.secrets.api_key
         # API endpoint
         url = "https://api.govinfo.gov/search"
@@ -79,58 +81,110 @@ def gov_data(user):
         'Content-Type': 'application/json',
         'x-api-key': api_key
         }
-        
-        with st.form("gov", clear_on_submit=False):
-            search  =  st.text_input(label="Query:", placeholder="enter you text here")    
-            pageSize = st.number_input(label="Page Size:", placeholder="articles count in single page", min_value=10, max_value=100, value="min", step=10)
-            if st.form_submit_button(label="Search"):
-        
-                # Body data for the request
-                body = {
-                "query": search,
-                "pageSize": pageSize,
-                "offsetMark": "*",
-                "sorts": [
-                    {
-                        "field": "relevancy",
-                        "sortOrder": "ASC"
+        if on:
+            with st.form("gov", clear_on_submit=False):
+                search  =  st.text_input(label="Query:", placeholder="enter you text here")    
+                pageSize = st.number_input(label="Page Size:", placeholder="articles count in single page", min_value=10, max_value=100, value="min", step=10)
+                if st.form_submit_button(label="Search"):
+            
+                    # Body data for the request
+                    body = {
+                    "query": search,
+                    "pageSize": pageSize,
+                    "offsetMark": "*",
+                    "sorts": [
+                        {
+                            "field": "relevancy",
+                            "sortOrder": "ASC"
+                        }
+                    ],
+                    "historical": True,
+                    "resultLevel": "default"
                     }
-                ],
-                "historical": True,
-                "resultLevel": "default"
-                }
-                # Sending POST request
-                response = requests.post(url, headers=headers, json=body)
-    
-                # Print the response
-                if response.status_code == 200:
-                    st.session_state.gov_articles = response.json()
-                    st.success(f"related documents found:{st.session_state.gov_articles["count"]}")
-    
-                else:
-                    st.error(f"Error: {response.status_code}")
-        if st.session_state.gov_articles:
-            # Display each result in the JSON response
-            for result in st.session_state.gov_articles['results']:
-                st.subheader(result['title'])
-                # st.write(f"Package ID: {result['packageId']}")
-                # st.write(f"Granule ID: {result['granuleId']}")
-                st.write(f"Last Modified: {result['lastModified']}")
-                st.write(f"Date Issued: {result['dateIssued']}")
-                st.write(f"Collection Code: {result['collectionCode']}")
-                
-                # Display government authors
-                st.write("Government Authors:")
-                for author in result['governmentAuthor']:
-                    st.write(f"- {author}")
-               
-                # Display download links
-                url_pdf = f"{result['download']['pdfLink']}?api_key={api_key}"
-                st.page_link(url_pdf, label="PDF", icon="🌎")
-                
-    
-                # Divider for clarity between results
-                st.markdown("---")
+                    # Sending POST request
+                    response = requests.post(url, headers=headers, json=body)
+        
+                    # Print the response
+                    if response.status_code == 200:
+                        st.session_state.gov_articles = response.json()
+                        st.success(f"related documents found:{st.session_state.gov_articles["count"]}")
+        
+                    else:
+                        st.error(f"Error: {response.status_code}")
+            if st.session_state.gov_articles:
+                # Display each result in the JSON response
+                for result in st.session_state.gov_articles['results']:
+                    st.subheader(result['title'])
+                    # st.write(f"Package ID: {result['packageId']}")
+                    # st.write(f"Granule ID: {result['granuleId']}")
+                    st.write(f"Last Modified: {result['lastModified']}")
+                    st.write(f"Date Issued: {result['dateIssued']}")
+                    st.write(f"Collection Code: {result['collectionCode']}")
+                    
+                    # Display government authors
+                    st.write("Government Authors:")
+                    for author in result['governmentAuthor']:
+                        st.write(f"- {author}")
+                   
+                    # Display download links
+                    url_pdf = f"{result['download']['pdfLink']}?api_key={api_key}"
+                    st.page_link(url_pdf, label="PDF", icon="🌎")
+                    
+        
+                    # Divider for clarity between results
+                    st.markdown("---")
+
+
+
+        else:
+            with st.form("doc_gov", clear_on_submit=False):
+                        options=["BILLS", "BILLSTATUS", "BUDGET", "CCAL", "CDIR", "CDOC", "CFR", "CHRG", "CMR", "COMPS",
+                                "CPD", "CPRT", "CREC", "CRECB", "CRI", "CRPT", "CZIC", "ECFR", "ECONI", "ERIC","ERP",
+                                "FR", "GAOREPORTS", "GOVMAN", "GOVPUB", "GPO", "HJOURNAL", "HMAN", "HOB", "LSA", "PAI",
+                                "PLAW", "PPP", "SERIALSET", "SJOURNAL", "SMAN", "STATUTE", "USCODE", "USCOURTS" ] 
+                        collection = st.selectbox(label="collection code:", options=options)
+                        date = st.date_input("last modified date:")
+                        mod_date = f"{date}T00%3A00%3A00Z"
+                        st.write(mod_date)
+                        pageSize = st.number_input(label="Page Size:", placeholder="articles count in single page", min_value=10, max_value=100, value="min", step=10)
+            
+                        if st.form_submit_button(label="Search"):
+                            base_url = f"https://api.govinfo.gov/collections/{collection}/{mod_date}?pageSize={pageSize}&offsetMark=%2A&api_key=hjacpL8PngljgbCwwPTrr7xG4KSGfdkbr5RWHgho"
+                            # # Parameters for the GET requesta
+                            # params = {
+                            #     "pageSize": pageSize,
+                            #     "offsetMark": "*",
+                            #     "api_key": api_key
+                            # }
+                            response = requests.get(base_url)
+                            if response.status_code == 200:
+                                st.session_state.gov_articles = response.json()
+                                # st.write(st.session_state.gov_articles)
+                                st.success(f"published collections found:{st.session_state.gov_articles["count"]}")
+                            else:
+                                st.error("response failure")
+                                # st.success(f"published collections found:{st.session_state.gov_articles["count"]}")
+                                # Display the results in the Streamlit app
+                    if st.session_state.gov_articles:
+                        i = 0
+                        for package in st.session_state.gov_articles['packages']:
+                            
+                            st.subheader(f"{i+1} : {package['title']}")
+                            st.write(f"Package ID: {package['packageId']}")
+                            st.write(f"Last Modified: {package['lastModified']}")
+                            # st.write(f"Title: {package['title']}")
+                            # st.write(f"Date Issued: {package['dateIssued']}")
+                            # st.write(f"[View Summary]({package['packageLink']})")
+                            url_summary = package['packageLink']
+                            url = url_summary.replace("summary", "pdf")
+                            url_pdf = f"{url}?api_key={api_key}"
+                            st.page_link(url_pdf, label="PDF", icon="🌎")
+                            i+=1
+                            st.markdown("---")
+            
+                    else:
+                        st.write("No data available.")
+            
     except:
         st.error("error detected, no data found")
         st.session_state.gov_articles = []
