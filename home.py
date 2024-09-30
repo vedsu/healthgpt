@@ -145,17 +145,12 @@ def gov_data(user):
                         collection = st.selectbox(label="collection code:", options=options)
                         date = st.date_input("last modified date:")
                         mod_date = f"{date}T00%3A00%3A00Z"
-                        st.write(mod_date)
+                        # st.write(mod_date)
                         pageSize = st.number_input(label="Page Size:", placeholder="articles count in single page", min_value=10, max_value=100, value="min", step=10)
             
                         if st.form_submit_button(label="Search"):
                             base_url = f"https://api.govinfo.gov/collections/{collection}/{mod_date}?pageSize={pageSize}&offsetMark=%2A&api_key=hjacpL8PngljgbCwwPTrr7xG4KSGfdkbr5RWHgho"
-                            # # Parameters for the GET requesta
-                            # params = {
-                            #     "pageSize": pageSize,
-                            #     "offsetMark": "*",
-                            #     "api_key": api_key
-                            # }
+                            
                             response = requests.get(base_url)
                             if response.status_code == 200:
                                 st.session_state.gov_articles = response.json()
@@ -172,9 +167,6 @@ def gov_data(user):
                             st.subheader(f"{i+1} : {package['title']}")
                             st.write(f"Package ID: {package['packageId']}")
                             st.write(f"Last Modified: {package['lastModified']}")
-                            # st.write(f"Title: {package['title']}")
-                            # st.write(f"Date Issued: {package['dateIssued']}")
-                            # st.write(f"[View Summary]({package['packageLink']})")
                             url_summary = package['packageLink']
                             url = url_summary.replace("summary", "pdf")
                             url_pdf = f"{url}?api_key={api_key}"
@@ -202,27 +194,14 @@ def news_data(user):
     
     
     on = st.sidebar.toggle("View headlines")
-    
-
-              
-    
+ 
         
     if on:
             with st.sidebar.form(f"{user} search headlines", clear_on_submit=False):
                 search_text = st.text_input('search text:', placeholder= 'enter your text to search')
                 submit_button = st.form_submit_button(label='Search')
                 if submit_button:
-                    # st.session_state.article = True
-                    # /v2/top-headlines
-                    # top_headlines = newsapi.get_top_headlines(q=search_text,
-                    #                     #   sources='bbc-news,the-verge',
-                    #                       category='health',
-                    #                       language='en',
-                    #                       country='us')
-                    # st.session_state.article = top_headlines
-                    # st.text_area(label="articles", placeholder=top_headlines)
-            
-                    #  https://newsapi.org/v2/top-headlines?q=hipaa&country=us&category=health&apiKey=7f4969be87b541b887aa3c6a22176126   
+                   
                     url = "https://newsapi.org/v2/top-headlines"
                     params = {
                         'q' : search_text,
