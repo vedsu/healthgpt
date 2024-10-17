@@ -77,7 +77,7 @@ def fed_gov(user):
         
 
         include_term = st.checkbox("Include Search Term 📝")
-        if include_term:
+        with st.expander():
             term = st.text_input("Search Term", value=" ")
 
         include_section = st.checkbox("Include Section 🏛️")
