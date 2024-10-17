@@ -76,30 +76,30 @@ def fed_gov(user):
         st.markdown("#### 🔍 **Search Parameters**")
         
 
-        include_term = st.checkbox("Include Search Term 📝", value=True)
+        include_term = st.checkbox("Include Search Term 📝")
         if include_term:
             term = st.text_input("Search Term", value=" ")
 
-        include_section = st.checkbox("Include Section 🏛️", value=True)
+        include_section = st.checkbox("Include Section 🏛️")
         if include_section:
             section = st.selectbox("Section", ["--","Health-and-public-welfare","business-and-industry","environment","money","science-and-technology","world"])
 
 
-        include_cfr_title = st.checkbox("Include CFR Title 📖", value=True)
+        include_cfr_title = st.checkbox("Include CFR Title 📖")
         if include_cfr_title:
-            cfr_title = st.number_input("CFR Title")
+            cfr_title = st.number_input("CFR Title", min = 1, max = 50, steps = 1)
 
-        include_cfr_part = st.checkbox("Include CFR Part 📃", value=True)
-        if include_cfr_part:
-            cfr_part = st.number_input("CFR Part")
+        # include_cfr_part = st.checkbox("Include CFR Part 📃")
+        # if include_cfr_part:
+        #     cfr_part = st.number_input("CFR Part")
 
     
-        include_dates = st.checkbox("Include Publication Date Range 📅", value=True)
+        include_dates = st.checkbox("Include Publication Date Range 📅")
         if include_dates:
             start_date = st.date_input("Start Publication Date")
             end_date = st.date_input("End Publication Date")
 
-        include_effective_dates = st.checkbox("Include On and after effective Date 📅", value=True)
+        include_effective_dates = st.checkbox("Include On and after effective Date 📅")
         if include_effective_dates:
             effective_start_date = st.date_input("Start effective Date")
 
