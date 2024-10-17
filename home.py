@@ -129,8 +129,8 @@ def fed_gov(user):
         if include_cfr_title:
             params["conditions[cfr][title]"] = cfr_title
 
-        if include_cfr_part:
-            params["conditions[cfr][part]"] = cfr_part
+        # if include_cfr_part:
+        #     params["conditions[cfr][part]"] = cfr_part
 
         if include_dates:
             params["conditions[publication_date][gte]"] = start_date
