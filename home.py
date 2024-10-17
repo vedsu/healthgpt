@@ -87,7 +87,7 @@ def fed_gov(user):
 
         include_cfr_title = st.checkbox("Include CFR Title 📖")
         # if include_cfr_title:
-        cfr_title = st.number_input("CFR Title", min = 1, max = 50, steps = 1)
+        cfr_title = st.number_input("CFR Title", min_value = 1, max_value = 50, step = 1)
 
         # include_cfr_part = st.checkbox("Include CFR Part 📃")
         # if include_cfr_part:
