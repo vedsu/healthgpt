@@ -18,6 +18,10 @@ aws_access_key_id = st.secrets.aws_access_key_id
 aws_secret_access_key = st.secrets.aws_secret_access_key
 db_username = st.secrets.db_username
 db_password = st.secrets.db_password
+
+if 'fed_articles' not in st.session_state:
+    st.session_state.fed_articles = []
+
 if 'gov_articles' not in st.session_state:
     st.session_state.gov_articles = []
 
@@ -61,6 +65,107 @@ icon_dict = {"Arunav":"🐼",
                     "Shashikant":"🧑‍💻",
                     "Developer":"🧊"}
                     
+
+# function to view federal register
+def fed_gov(user):
+    st.session_state.role = 'fed'
+    # gov_articles =  []
+    icon = icon_dict.get(user)
+    st.info(f"Hello, {user}!", icon=icon)
+    with st.form(key='api_form'):
+        st.markdown("#### 🔍 **Search Parameters**")
+        
+
+        include_term = st.checkbox("Include Search Term 📝", value=True)
+        if include_term:
+            term = st.text_input("Search Term", value=" ")
+
+        include_section = st.checkbox("Include Section 🏛️", value=True)
+        if include_section:
+            section = st.selectbox("Section", ["--","Health-and-public-welfare","business-and-industry","environment","money","science-and-technology","world"])
+
+
+        include_cfr_title = st.checkbox("Include CFR Title 📖", value=True)
+        if include_cfr_title:
+            cfr_title = st.number_input("CFR Title")
+
+        include_cfr_part = st.checkbox("Include CFR Part 📃", value=True)
+        if include_cfr_part:
+            cfr_part = st.number_input("CFR Part")
+
+    
+        include_dates = st.checkbox("Include Publication Date Range 📅", value=True)
+        if include_dates:
+            start_date = st.date_input("Start Publication Date")
+            end_date = st.date_input("End Publication Date")
+
+        include_effective_dates = st.checkbox("Include On and after effective Date 📅", value=True)
+        if include_effective_dates:
+            effective_start_date = st.date_input("Start effective Date")
+
+        
+
+        per_page = st.number_input("Results per Page 📄",value=1000)
+
+        submit_button = st.form_submit_button(label="🚀 Submit Search")
+
+
+    if submit_button:
+        
+        api_url = "https://www.federalregister.gov/api/v1/documents.json"
+
+        params = {
+            "per_page": per_page,
+            "order": "newest"
+        }
+
+        # Include each parameter only if the corresponding checkbox is selected
+        if include_term:
+            params["conditions[term]"] = term
+
+        if include_section:
+            params["conditions[sections][]"] = section
+
+        if include_cfr_title:
+            params["conditions[cfr][title]"] = cfr_title
+
+        if include_cfr_part:
+            params["conditions[cfr][part]"] = cfr_part
+
+        if include_dates:
+            params["conditions[publication_date][gte]"] = start_date
+            params["conditions[publication_date][lte]"] = end_date
+        
+        if include_effective_dates:
+            params["conditions[effective_date][gte]"] = effective_start_date
+            
+
+        # Fetch results from the API
+        response = requests.get(api_url, params=params)
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            st.session_state.fed_articles  = response.json()
+
+            if 'results' in st.session_state.fed_articles:
+                st.markdown(f"<h3 style='color: #4CAF50;'>Found {len(st.session_state.fed_articles['results'])} Results</h3>", unsafe_allow_html=True)
+
+                # Display each result in a styled container
+                for document in st.session_state.fed_articles['results']:
+                    st.markdown("<div style='border: 2px solid #4CAF50; padding: 10px; margin: 10px 0; border-radius: 5px;'>", unsafe_allow_html=True)
+                    st.markdown(f"**Title:** {document.get('title', 'N/A')}")
+                    st.markdown(f"**Publication Date:** {document.get('publication_date', 'N/A')}")
+                    st.markdown(f"**abstract:** {document.get('abstract', 'N/A')}")
+                    st.markdown(f"**Details URL:** [Link]({document.get('html_url', 'N/A')})")
+                    st.markdown(f"**PDF URL:** [Link]({document.get('pdf_url','N/A')})")
+                    st.markdown("</div>", unsafe_allow_html=True)
+            else:
+                st.warning("No 'results' key found in the response.")
+        else:
+            st.error(f"Failed to fetch data. Status Code: {response.status_code}")
+            st.write("Error response:", response.text)
+
+
 
 # function to view myGov 
 
