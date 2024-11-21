@@ -424,9 +424,9 @@ def form_data(user):
         uploaded_file = None
         # text = None
         # on = st.toggle("Activate text feature")
-        option_dict = {"Arunav":["Community Source", "Government Source", "Organisations", "Others"], 
+        option_dict = {"Arunav":["Community Source", "Competitors Source", "Government Source", "Organisations", "Others"], 
             "Jit":["Google Trends", "Instagram", "Facebook", "Twitter", "Others"],
-            "Shubham":["You Tube", "Community Source", "Government Source", "Organisations", "Others"],
+            "Shubham":["You Tube", "Community Source", "Competitors Source", "Government Source", "Organisations", "Others"],
             "Priya":["Others"], 
             "Amar":["Competitors Source", "Inhouse Source", "Others"], 
             "Varsha":["You Tube","Competitors Source", "Inhouse Source", "Others"], 
