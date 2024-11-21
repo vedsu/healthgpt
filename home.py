@@ -426,7 +426,7 @@ def form_data(user):
         # on = st.toggle("Activate text feature")
         option_dict = {"Arunav":["Community Source", "Competitors Source", "Government Source", "Organisations", "Others"], 
             "Jit":["Google Trends", "Instagram", "Facebook", "Twitter", "Others"],
-            "Shubham":["You Tube", "Community Source", "Competitors Source", "Government Source", "Organisations", "Others"],
+            "Shubham":["Community Source", "Competitors Source", "Government Source", "Organisations", "You Tube", "Others"],
             "Priya":["Others"], 
             "Amar":["Competitors Source", "Inhouse Source", "Others"], 
             "Varsha":["You Tube","Competitors Source", "Inhouse Source", "Others"], 
@@ -447,7 +447,7 @@ def form_data(user):
             # st.info(f"Hello, {user}!")
             options = sorted(option_dict.get(user))
             document = st.text_input('Ref doc :', placeholder='enter your reference doc name')
-            platform = st.selectbox("Ref platform :", options = options)
+            platform = st.selectbox("Ref platform :", options = options, index=1)
             link = st.text_area("Ref url :", placeholder="paste your  reference url")
             # if on:
             #     text_area = st.text_area("Content :", placeholder="paste your content here", height = 500)
