@@ -424,18 +424,18 @@ def form_data(user):
         uploaded_file = None
         # text = None
         # on = st.toggle("Activate text feature")
-        option_dict = {"Arunav":["Community Source", "Competitors Source", "Government Source", "Organisations", "Others"], 
+        option_dict = {"Arunav":["Community Source", "Competitors Source", "Government Source", "Organisations","HR Source","Real Estate Source", "Others"], 
             "Jit":["Google Trends", "Instagram", "Facebook", "Twitter", "Others"],
             "Shubham":["Community Source", "Competitors Source", "Government Source", "Organisations", "You Tube", "Others"],
             "Priya":["Others"], 
             "Amar":["Competitors Source", "Inhouse Source", "Others"], 
             "Varsha":["You Tube","Competitors Source", "Inhouse Source", "Others"], 
             "Dharmendra":["Community Source", "Government Source", "Organisations","Google Trends", "Instagram", "Facebook", "Twitter",
-                        "You Tube", "Competitors Source", "Inhouse Source","Linkedin", "Others"],
+                        "You Tube", "Competitors Source", "Inhouse Source","Linkedin","HR Source","Real Estate Source", "Others"],
             "Vivek":["Linkedin", "Others" ],
             "Shashikant":["Others"],
             "Developer":["Community Source", "Government Source", "Organisations","Google Trends", "Instagram", "Facebook", "Twitter",
-                        "You Tube", "Competitors Source", "Inhouse Source","Linkedin", "Others"],}
+                        "You Tube", "Competitors Source", "Inhouse Source","Linkedin","HR Source","Real Estate Source", "Others"],}
 
         doc_count = len(list(collection.find({"user":user})))
         with st.form(f"{user}", clear_on_submit=True):
